@@ -15,8 +15,9 @@ import AuthPage from "../pages/authPage";
 
 import NavBar from "../components/navbar";
 import PostPage from "../pages/postPage";
-// import ScrollToTop from "./scrollToTop";
+import ScrollToTop from "./scrollToTop";
 
+// window.history.scrollRestoration = "manual";
 const Router = () => {
   const { loggedIn, getLoggedIn } = useContext(AuthContext);
   {
@@ -28,9 +29,9 @@ const Router = () => {
 
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <div>
         <NavBar />
-        {/* <ScrollToTop /> */}
         <Routes>
           <Route
             path="/auth"
