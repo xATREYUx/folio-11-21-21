@@ -1,9 +1,8 @@
+import firebaseConfig from "./firebase/config";
+
 import "./App.css";
 import axios from "axios";
 import domain from "./util/domain";
-
-//initialize app
-import firebaseConfig from "./firebase/config";
 
 import Router from "./routing/Router";
 import Layout from "./components/layout";
