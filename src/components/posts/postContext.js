@@ -47,29 +47,57 @@ const PostContextProvider = (props) => {
     getUsersPosts();
   };
 
-  const updatePost = async (data, input, index) => {
-    console.log("---updatePost Initiated---");
-    const editPostId = data.id;
-    var formData = new FormData();
-    const dataFunction = async () => {
-      formData.append("title", input.title);
-      formData.append("caption", input.caption);
-    };
-    await dataFunction();
+  // const updatePost = async (data, input, index) => {
+  //   console.log("---updatePost Initiated---");
+  //   const editPostId = data.id;
+  //   var formData = new FormData();
+  //   const dataFunction = async () => {
+  //     formData.append("title", input.title);
+  //     formData.append("caption", input.caption);
+  //   };
+  //   await dataFunction();
 
-    const config = {
-      headers: {
-        "content-type": "multipart/form-data",
-      },
-    };
-    const editPostRes = await axios.put(
-      `${domain}/posts/${editPostId}`,
-      formData,
-      config
-    );
-    getPosts();
+  //   const config = {
+  //     headers: {
+  //       "content-type": "multipart/form-data",
+  //     },
+  //   };
+  //   const editPostRes = await axios.put(
+  //     `${domain}/posts/${editPostId}`,
+  //     formData,
+  //     config
+  //   );
+  //   getPosts();
+  // };
+  const updatePost = async ({ formData, id }) => {
+    try {
+      console.log("editPost Action Initiated");
+      const config = {
+        headers: {
+          "content-type": "multipart/form-data",
+        },
+      };
+      const editPostRes = await axios.put(
+        `${domain}/posts/${id}`,
+        formData,
+        config
+      );
+      console.log("editPost log", editPostRes.data);
+      // const data = editPostRes.data;
+      // const newState = usersPosts.filter((item) => item.id === id);
+      // setUsersPosts((prevState) => [...newState, data]);
+      getUsersPosts();
+    } catch (err) {
+      console.log("update error", err);
+    }
   };
 
+  const deletePost = async ({ id }) => {
+    console.log("destroy post: ", id);
+    const delPostRes = await axios.delete(`${domain}/posts/${id}`);
+    console.log("delPostRes", delPostRes);
+    getUsersPosts();
+  };
   return (
     <PostContext.Provider
       value={{
@@ -78,6 +106,7 @@ const PostContextProvider = (props) => {
         setUsersPosts,
         getPosts,
         createPost,
+        deletePost,
         updatePost,
         getUsersPosts,
         usersPosts,

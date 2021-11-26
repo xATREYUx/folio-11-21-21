@@ -64,9 +64,7 @@ const LoginForm = () => {
       noValidate
       autoComplete="off"
     >
-      {/* <form onSubmit={login} className="auth-form"> */}
       <h3 className={classes.formTitle}>Login</h3>
-
       <TextField
         className={classes.input}
         type="email"

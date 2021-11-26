@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 // import { PostPageContainer } from "./post-page-styles";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +6,9 @@ import Linkify from "react-linkify";
 import { Box, display } from "@mui/system";
 import world from "../shared/images/logo.svg";
 import { makeStyles } from "@mui/styles";
-import { Grid, Hidden, Paper, Typography } from "@mui/material";
+import { Button, Grid, Hidden, Paper, Typography } from "@mui/material";
+import editPostPage from "./editPostPage";
+import EditPostPage from "./editPostPage";
 
 const useStyles = makeStyles((theme) => ({
   imageSection: {
@@ -56,36 +58,56 @@ const PostPage = (props) => {
   const navigate = useNavigate();
   const postDetails = useLocation().state;
   const classes = useStyles();
+  const [editMode, setEditMode] = useState(false);
 
   console.log("PostPage props", postDetails);
   return (
-    <Box>
-      <Grid container align="center" spacing={2}>
-        <Grid item xs={12} sm={12} md={6}>
-          <Paper className={classes.imageContainer}>
-            <img
-              className={classes.postImage}
-              src={postDetails.postURLs[0]}
-              alt="Youre probably not online"
-            />
+    <div>
+      {!editMode ? (
+        <Box>
+          <Grid container align="center" spacing={2}>
+            <Grid item xs={12} sm={12} md={6}>
+              <Paper className={classes.imageContainer}>
+                <img
+                  className={classes.postImage}
+                  src={postDetails.postURLs[0]}
+                  alt="Youre probably not online"
+                />
+              </Paper>
+            </Grid>
+            <Grid item xs={12} sm={12} md={6}>
+              <Paper className={classes.imageContainer}>
+                <img
+                  className={classes.postImage}
+                  src={postDetails.postURLs[1]}
+                />
+              </Paper>
+            </Grid>
+          </Grid>
+          <Button
+            color="success"
+            variant="contained"
+            onClick={() => setEditMode(true)}
+          >
+            Edit
+          </Button>
+          <Paper className={classes.detailsContainer}>
+            <Typography variant="h3">{postDetails.title}</Typography>
+            <br />
+            <Typography variant="blogPost">{postDetails.caption}</Typography>
+            <br />
+            <Linkify>
+              <Typography variant="blogPost">{postDetails.content}</Typography>
+            </Linkify>
+            <div className={classes.logoContainer}>
+              <img src={world} alt="logo" className={classes.worldFooter} />
+            </div>
           </Paper>
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Paper className={classes.imageContainer}>
-            <img className={classes.postImage} src={postDetails.postURLs[1]} />
-          </Paper>
-        </Grid>
-      </Grid>
-      <Paper className={classes.detailsContainer}>
-        <Typography variant="h3">{postDetails.title}</Typography>
-        <Linkify>
-          <Typography variant="blogPost">{postDetails.content}</Typography>
-        </Linkify>
-        <div className={classes.logoContainer}>
-          <img src={world} alt="logo" className={classes.worldFooter} />
-        </div>
-      </Paper>
-    </Box>
+        </Box>
+      ) : (
+        <EditPostPage setEditMode={setEditMode} />
+      )}
+    </div>
   );
 };
 

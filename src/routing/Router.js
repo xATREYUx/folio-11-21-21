@@ -17,7 +17,7 @@ import NavBar from "../components/navbar";
 import PostPage from "../pages/postPage";
 import ScrollToTop from "./scrollToTop";
 
-// window.history.scrollRestoration = "manual";
+window.history.scrollRestoration = "manual";
 const Router = () => {
   const { loggedIn, getLoggedIn } = useContext(AuthContext);
   {

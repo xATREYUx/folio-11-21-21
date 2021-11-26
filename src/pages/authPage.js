@@ -9,14 +9,7 @@ import RegisterForm from "../components/auth/register";
 // import { AuthPageContainer } from "./auth-page-styles";
 const useStyles = makeStyles((theme) => ({
   authPageContainer: {
-    // display: "flex",
-    // flexDirection: "column",
-    // width: "70%",
-    // fontFamily: "breakers",
-    // justifyContent: "center",
-    // alignItems: "center",
     textAlign: "center",
-    // padding: "2rem",
     margin: "4rem",
     [theme.breakpoints.down("sm")]: {
       marginLeft: "1rem",
