@@ -19,7 +19,7 @@ import ScrollToTop from "./scrollToTop";
 
 window.history.scrollRestoration = "manual";
 const Router = () => {
-  const { loggedIn, getLoggedIn } = useContext(AuthContext);
+  const { isLoading, loggedIn, getLoggedIn } = useContext(AuthContext);
   {
     loggedIn && console.log("Router loggedIn: ", loggedIn);
   }
@@ -43,7 +43,6 @@ const Router = () => {
             path="/user"
             element={<PrivateRoute component={<UserPage />} />}
           />
-
           <Route path="/post/:id" element={<PostPage />} />
           <Route path="*" element={<HomePage />} />
         </Routes>

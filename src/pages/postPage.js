@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 // import { PostPageContainer } from "./post-page-styles";
 import { useLocation } from "react-router";
 import { useNavigate } from "react-router-dom";
@@ -7,8 +7,8 @@ import { Box, display } from "@mui/system";
 import world from "../shared/images/logo.svg";
 import { makeStyles } from "@mui/styles";
 import { Button, Grid, Hidden, Paper, Typography } from "@mui/material";
-import editPostPage from "./editPostPage";
-import EditPostPage from "./editPostPage";
+import EditPostPage from "../components/posts/editPost";
+import AuthContext from "../components/auth/authContext";
 
 const useStyles = makeStyles((theme) => ({
   imageSection: {
@@ -55,12 +55,15 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const PostPage = (props) => {
+  const { loggedIn } = useContext(AuthContext);
+  const uid = loggedIn?.user?.uid;
+  console.log("postpage loggedin", loggedIn);
   const navigate = useNavigate();
   const postDetails = useLocation().state;
   const classes = useStyles();
   const [editMode, setEditMode] = useState(false);
 
-  console.log("PostPage props", postDetails);
+  console.log("postDetails", postDetails);
   return (
     <div>
       {!editMode ? (
@@ -70,7 +73,7 @@ const PostPage = (props) => {
               <Paper className={classes.imageContainer}>
                 <img
                   className={classes.postImage}
-                  src={postDetails.postURLs[0]}
+                  src={postDetails.cardImage}
                   alt="Youre probably not online"
                 />
               </Paper>
@@ -79,18 +82,20 @@ const PostPage = (props) => {
               <Paper className={classes.imageContainer}>
                 <img
                   className={classes.postImage}
-                  src={postDetails.postURLs[1]}
+                  src={postDetails.postImage}
                 />
               </Paper>
             </Grid>
           </Grid>
-          <Button
-            color="success"
-            variant="contained"
-            onClick={() => setEditMode(true)}
-          >
-            Edit
-          </Button>
+          {uid === postDetails.creator ? (
+            <Button
+              color="success"
+              variant="contained"
+              onClick={() => setEditMode(true)}
+            >
+              Edit
+            </Button>
+          ) : null}
           <Paper className={classes.detailsContainer}>
             <Typography variant="h3">{postDetails.title}</Typography>
             <br />

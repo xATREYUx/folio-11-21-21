@@ -71,7 +71,7 @@ const PostContextProvider = (props) => {
   // };
   const updatePost = async ({ formData, id }) => {
     try {
-      console.log("editPost Action Initiated");
+      console.log("editPost Action Initiated", formData);
       const config = {
         headers: {
           "content-type": "multipart/form-data",

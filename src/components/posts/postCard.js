@@ -71,7 +71,7 @@ const PostCard = ({ post }) => {
         <CardMedia
           className={classes.cardMedia}
           component="img"
-          image={post.postURLs[0]}
+          image={post.cardImage}
           alt="You're probably not online"
         />
         <CardContent className={classes.cardContent}>

@@ -15,13 +15,15 @@ const AuthContext = createContext();
 
 const AuthContextProvider = (props) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
 
   const auth = getAuth();
 
+  //checks if user is logged in
   const getLoggedIn = async () => {
-    console.log("getLoggedIn Initiated");
     try {
+      setIsLoading(true);
+      console.log("getLoggedIn Initiated");
       const validatedUser = await axios.get(`${domain}/auth/loggedIn`);
       const userData = validatedUser.data;
       // console.log("AuthContextProvider validatedUser", validatedUser.data);
@@ -40,11 +42,13 @@ const AuthContextProvider = (props) => {
       //       });
       //   });
       // }
+      setIsLoading(false);
     } catch (e) {
       console.log("Logout error", e);
     }
   };
 
+  //creates a user
   const createUser = async ({ email, password, passwordVerify }) => {
     console.log("New User Creation Initiated", props);
     try {
@@ -75,6 +79,7 @@ const AuthContextProvider = (props) => {
     }
   };
 
+  //logs in user
   const loginUser = async ({ email, password }) => {
     //Sign In user and get token response
     try {

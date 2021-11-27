@@ -36,7 +36,7 @@ const UserPage = () => {
     getUsersPosts();
   }, []);
 
-  console.log("UserPage: ", usersPosts);
+  console.log("UserPage: ", loggedIn);
   return (
     <div className={classes.userPageBox}>
       <h3 className={classes.userName}>{loggedIn.user.email}</h3>
