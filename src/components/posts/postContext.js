@@ -25,7 +25,9 @@ const PostContextProvider = (props) => {
   const getUsersPosts = async () => {
     try {
       console.log("----getUsersPosts Initiated----");
-      const getUsersPostsRes = await axios.get(`${domain}/posts/user`);
+      const getUsersPostsRes = await axios.get(`${domain}/posts/user`, {
+        headers: { "x-access-token": localStorage.getItem("token") },
+      });
       console.log("getUsersPosts response", getUsersPostsRes.data);
       setUsersPosts(getUsersPostsRes.data);
     } catch (err) {
@@ -38,6 +40,7 @@ const PostContextProvider = (props) => {
     const config = {
       headers: {
         "content-type": "multipart/form-data",
+        "x-access-token": localStorage.getItem("token"),
       },
     };
     await axios
@@ -75,6 +78,7 @@ const PostContextProvider = (props) => {
       const config = {
         headers: {
           "content-type": "multipart/form-data",
+          "x-access-token": localStorage.getItem("token"),
         },
       };
       const editPostRes = await axios.put(
@@ -94,7 +98,9 @@ const PostContextProvider = (props) => {
 
   const deletePost = async ({ id }) => {
     console.log("destroy post: ", id);
-    const delPostRes = await axios.delete(`${domain}/posts/${id}`);
+    const delPostRes = await axios.delete(`${domain}/posts/${id}`, {
+      headers: { "x-access-token": localStorage.getItem("token") },
+    });
     console.log("delPostRes", delPostRes);
     getUsersPosts();
   };

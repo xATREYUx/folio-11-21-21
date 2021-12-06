@@ -43,8 +43,8 @@ const RegisterForm = () => {
         passwordVerify,
       };
       await createUser(registerData);
+      await getLoggedIn();
       navigate("/user");
-      getLoggedIn();
     } catch (err) {
       console.log("Error in createUser function: ", err);
     }

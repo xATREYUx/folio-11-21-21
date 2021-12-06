@@ -7,7 +7,6 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
-import Cookies from "js-cookie";
 
 // import EnterUserAdmin from "../../components/admin/MakeUserAdmin";
 
@@ -25,15 +24,12 @@ const AuthContextProvider = (props) => {
   const getLoggedIn = async () => {
     try {
       setIsLoading(true);
-      console.log("getLoggedIn Initiated");
-      const cookies = JSON.stringify(Cookies.get());
-      console.log("site cookies", cookies);
+      console.log("getLoggedIn Initiated", localStorage.getItem("token"));
       const validatedUser = await axios.get(`${domain}/auth/loggedIn`, {
-        method: "get",
-        withCredentials: true,
+        headers: { "x-access-token": localStorage.getItem("token") },
       });
       const userData = validatedUser.data;
-      console.log("AuthContextProvider validatedUser", validatedUser.data);
+      console.log("AuthContextProvider validatedUser", userData);
       // console.log("Is User Logged In?: ", loggedIn);
       setLoggedIn(userData);
       // if (validatedUser) {
@@ -60,32 +56,21 @@ const AuthContextProvider = (props) => {
     console.log("New User Creation Initiated", props);
     try {
       //create user and get token response
-      await createUserWithEmailAndPassword(auth, email, password)
-        .then((createUserRes) => {
-          let fbToken = { token: null };
-          console.log(
-            "userCredential accessToken",
-            createUserRes.user.accessToken
-          );
-          fbToken = { token: createUserRes.user.accessToken };
-          return fbToken;
-        })
-        .then((fbToken) => {
-          console.log("fbToken console.log", fbToken);
-          return axios.post(`${domain}/auth/create`, fbToken, {
-            withCredentials: true,
-          });
-        })
-        .then((res) => {
-          console.log(
-            "Created User. Checking authentication...",
-            JSON.stringify(res)
-          );
-          const cookies = JSON.stringify(Cookies.get());
-          console.log("site cookies", cookies);
-          // getLoggedIn();
-          // setLoggedIn(res);
-        });
+      let fbToken = { token: null };
+      const createUserRes = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
+      console.log("userCredential accessToken", createUserRes.user.accessToken);
+      fbToken = { fbToken: createUserRes.user.accessToken };
+      console.log("fbToken console.log", fbToken);
+      const createResponse = await axios.post(`${domain}/auth/create`, fbToken);
+      console.log(
+        "Created User. Checking authentication...",
+        JSON.stringify(createResponse)
+      );
+      localStorage.setItem("token", createResponse.data.token);
     } catch (err) {
       console.log("New User Creation Error: ", err);
     }
@@ -97,12 +82,15 @@ const AuthContextProvider = (props) => {
     try {
       let fbToken = { token: null };
       const { user } = await signInWithEmailAndPassword(auth, email, password);
-
       fbToken = { token: user.accessToken };
-      await axios.post(`${domain}/auth/login`, fbToken, {
-        withCredentials: true,
-      });
-      return "Login successfull";
+      const loginResponse = await axios.post(`${domain}/auth/login`, fbToken);
+      if (loginResponse.data.token) {
+        console.log(loginResponse);
+        setLoggedIn(false);
+      } else {
+        localStorage.setItem("token", loginResponse.data.token);
+        return "Login successfull";
+      }
     } catch (err) {
       console.log(err.code);
       console.log(err.message);
@@ -115,7 +103,10 @@ const AuthContextProvider = (props) => {
     console.log("Logout Initiated");
     try {
       await auth.signOut();
-      await axios.post(`${domain}/auth/logout`, "", { withCredentials: true });
+      await axios.post(`${domain}/auth/logout`, {
+        headers: { "x-access-token": localStorage.getItem("token") },
+      });
+      localStorage.setItem("token", null);
       setLoggedIn(null);
       // signed out
     } catch (e) {
