@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import domain from "../../util/domain";
 
 import axios from "axios";
-import Cookies from "js-cookie";
 
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
 

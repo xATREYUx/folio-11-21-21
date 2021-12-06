@@ -7,6 +7,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
 } from "firebase/auth";
+import Cookies from "js-cookie";
+
 // import EnterUserAdmin from "../../components/admin/MakeUserAdmin";
 
 // import EnterUserAdmin from "../components/adminComponents/MakeUserAdmin";
@@ -24,9 +26,14 @@ const AuthContextProvider = (props) => {
     try {
       setIsLoading(true);
       console.log("getLoggedIn Initiated");
-      const validatedUser = await axios.get(`${domain}/auth/loggedIn`);
+      const cookies = JSON.stringify(Cookies.get());
+      console.log("site cookies", cookies);
+      const validatedUser = await axios.get(`${domain}/auth/loggedIn`, {
+        method: "get",
+        withCredentials: true,
+      });
       const userData = validatedUser.data;
-      // console.log("AuthContextProvider validatedUser", validatedUser.data);
+      console.log("AuthContextProvider validatedUser", validatedUser.data);
       // console.log("Is User Logged In?: ", loggedIn);
       setLoggedIn(userData);
       // if (validatedUser) {
@@ -70,7 +77,12 @@ const AuthContextProvider = (props) => {
           });
         })
         .then((res) => {
-          console.log("Created User. Checking authentication...");
+          console.log(
+            "Created User. Checking authentication...",
+            JSON.stringify(res)
+          );
+          const cookies = JSON.stringify(Cookies.get());
+          console.log("site cookies", cookies);
           // getLoggedIn();
           // setLoggedIn(res);
         });
@@ -91,26 +103,6 @@ const AuthContextProvider = (props) => {
         withCredentials: true,
       });
       return "Login successfull";
-
-      // .then(({ user }) => {
-      //     console.log("user: ", user);
-      //     user
-      //       .getIdToken()
-      //       .then((tokenId) => {
-      //         fbToken = tokenId;
-      //       })
-      //       .catch((err) => {
-      //         console.log("login error: ", err);
-      //       });
-      //   })
-      //   .catch((err) => {
-      //     console.log("login error 2: ", err);
-      //     document.getElementById("error").innerHTML = err.message;
-      //     return;
-      //   });
-
-      // //Take token and use to set browser cookie
-      // await axios.post(`${domain}/auth/login`, fbToken);
     } catch (err) {
       console.log(err.code);
       console.log(err.message);
